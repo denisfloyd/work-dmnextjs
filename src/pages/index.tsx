@@ -4,7 +4,7 @@ import Head from "next/head";
 import Link from "next/link";
 
 import Prismic from "@prismicio/client";
-import PrismicDOM from "prismic-dom";
+import { RichText } from "prismic-dom";
 
 import { getPrismicClient } from "@/services/prismic";
 
@@ -41,7 +41,7 @@ export default function Home({ next_page, productsFromServer }: HomeProps) {
         const newProductsFromPagination = data.results.map((product) => {
           return {
             uid: product.uid,
-            title: PrismicDOM.RichText.asText(product.data.title),
+            title: RichText.asText(product.data.title),
             price: product.data.price,
             price_formatted: Intl.NumberFormat("pt-BR", {
               style: "currency",
@@ -104,7 +104,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const products = productResponse.results.map((product) => {
     return {
       uid: product.uid,
-      title: PrismicDOM.RichText.asText(product.data.title),
+      title: RichText.asText(product.data.title),
       price: product.data.price,
       price_formatted: Intl.NumberFormat("pt-BR", {
         style: "currency",
