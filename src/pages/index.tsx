@@ -60,6 +60,9 @@ export default function Home({ next_page, productsFromServer }: HomeProps) {
     <>
       <Head>
         <title>Home</title>
+
+        {/* SEO tag sample */}
+        <meta name="google" content="notranslate" />
       </Head>
 
       <main className={`${commonStyles.container}`}>
