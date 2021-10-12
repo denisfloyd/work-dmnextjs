@@ -1,8 +1,8 @@
 .fallback {
+  width: fit-content;
   font-size: 1.2rem;
   color: var(--pink-300);
-  display: block;
-  width: auto;
+  margin: 6rem auto;
 }
 
 .backbutton {
@@ -39,5 +39,15 @@
 
   p {
     color: var(--gray-300);
+  }
+}
+
+.buttonContainer {
+  margin: 2rem 0;
+
+  button {
+    & + button {
+      margin-left: 1rem;
+    }
   }
 }

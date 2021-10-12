@@ -1,6 +1,7 @@
-import { GetServerSideProps, GetStaticPaths, GetStaticProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 
 import { getPrismicClient } from "@/services/prismic";
@@ -8,6 +9,7 @@ import { RichText } from "prismic-dom";
 
 import commonStyles from "@/styles/common.module.scss";
 import styles from "./product.module.scss";
+import { useState } from "react";
 
 interface Product {
   uid?: string;
@@ -25,11 +27,24 @@ interface ProductProps {
 }
 
 export default function Product({ product }: ProductProps) {
+  const [showAddProductToCart, setShowAddProductToCart] = useState(false);
   const router = useRouter();
 
   if (router.isFallback) {
-    return <div className={`${styles.fallback}`}>Carregando produtos...</div>;
+    return <div className={`${styles.fallback}`}>Carregando produto...</div>;
   }
+
+  // dynamic import js/ts lib
+  const handleCalculateCep = async () => {
+    const cepCalculate = (await import("@/utils/cepCalculate")).default;
+    alert(cepCalculate("88800-000"));
+  };
+
+  // dymanic component import
+  const AddProductToCart = dynamic(
+    () => import("@/components/ProductAddCartAlert"),
+    { loading: () => <span>Carrengando componente ..</span>, ssr: false }
+  );
 
   return (
     <>
@@ -51,8 +66,17 @@ export default function Product({ product }: ProductProps) {
             <h1>{product.title}</h1>
             <span>{product.price_formatted}</span>
             <p>{product.description}</p>
+
+            <div className={styles.buttonContainer}>
+              <button onClick={handleCalculateCep}>Calcular Cep</button>
+              <button onClick={() => setShowAddProductToCart(true)}>
+                Adicionar ao carrinho
+              </button>
+            </div>
           </aside>
         </section>
+
+        {showAddProductToCart && <AddProductToCart />}
       </main>
     </>
   );
@@ -88,5 +112,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       product,
     },
+    revalidate: 1000 * 60 * 60 * 24, // 1 day
   };
 };
