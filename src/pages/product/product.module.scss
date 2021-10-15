@@ -1,0 +1,53 @@
+.fallback {
+  width: fit-content;
+  font-size: 1.2rem;
+  color: var(--pink-300);
+  margin: 6rem auto;
+}
+
+.backbutton {
+  display: block;
+  margin-bottom: 2rem;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  img {
+    width: 10rem;
+    object-fit: contain;
+  }
+}
+
+.product {
+  display: flex;
+  flex-direction: column;
+  margin-left: 1.5rem;
+
+  h1 {
+    font-size: 2rem;
+    color: var(--yellow-500);
+  }
+
+  span {
+    font-size: 2.3rem;
+    color: var(--gray-300);
+    margin: 1rem 0;
+  }
+
+  p {
+    color: var(--gray-300);
+  }
+}
+
+.buttonContainer {
+  margin: 2rem 0;
+
+  button {
+    & + button {
+      margin-left: 1rem;
+    }
+  }
+}
