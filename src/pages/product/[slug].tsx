@@ -4,6 +4,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 
+import Prismic from "@prismicio/client";
 import { getPrismicClient } from "@/services/prismic";
 import { RichText } from "prismic-dom";
 
@@ -43,7 +44,7 @@ export default function Product({ product }: ProductProps) {
   // dymanic component import
   const AddProductToCart = dynamic(
     () => import("@/components/ProductAddCartAlert"),
-    { loading: () => <span>Carrengando componente ..</span>, ssr: false }
+    { loading: () => <span>Carregando componente ..</span>, ssr: false }
   );
 
   return (
@@ -82,9 +83,21 @@ export default function Product({ product }: ProductProps) {
   );
 }
 
-export const getStaticPaths: GetStaticPaths = () => {
+export const getStaticPaths: GetStaticPaths = async () => {
+  const prismic = getPrismicClient();
+  const productResponse = await prismic.query(
+    [Prismic.predicates.at("document.type", "product")],
+    {
+      pageSize: 1,
+    }
+  );
+
   return {
-    paths: [],
+    paths: [
+      ...productResponse.results.map((product) => ({
+        params: { slug: product.uid },
+      })),
+    ],
     fallback: "blocking", // true, false, or "blocking"
   };
 };
@@ -112,6 +125,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       product,
     },
-    revalidate: 1000 * 60 * 60 * 24, // 1 day
+    revalidate: 60 * 60 * 24, // 1 day
   };
 };
